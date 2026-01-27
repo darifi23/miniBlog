@@ -6,6 +6,11 @@ const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
+// Email validation regex
+const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -28,6 +33,22 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (email, password) => {
+        // Validate inputs
+        if (!email || !password) {
+            toast.error('Email and password are required');
+            return false;
+        }
+
+        if (!isValidEmail(email)) {
+            toast.error('Please enter a valid email address');
+            return false;
+        }
+
+        if (password.length < 6) {
+            toast.error('Password must be at least 6 characters');
+            return false;
+        }
+
         try {
             const res = await api.post('/auth/login', { email, password });
             localStorage.setItem('token', res.data.token);
@@ -35,12 +56,34 @@ export const AuthProvider = ({ children }) => {
             toast.success('Login successful!');
             return true;
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Login failed');
+            const message = error.response?.data?.message || error.message || 'Login failed';
+            toast.error(message);
             return false;
         }
     };
 
     const register = async (username, email, password) => {
+        // Validate inputs
+        if (!username || !email || !password) {
+            toast.error('All fields are required');
+            return false;
+        }
+
+        if (username.length < 3) {
+            toast.error('Username must be at least 3 characters');
+            return false;
+        }
+
+        if (!isValidEmail(email)) {
+            toast.error('Please enter a valid email address');
+            return false;
+        }
+
+        if (password.length < 6) {
+            toast.error('Password must be at least 6 characters');
+            return false;
+        }
+
         try {
             const res = await api.post('/auth/register', { username, email, password });
             localStorage.setItem('token', res.data.token);
@@ -48,7 +91,8 @@ export const AuthProvider = ({ children }) => {
             toast.success('Registration successful!');
             return true;
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Registration failed');
+            const message = error.response?.data?.message || error.message || 'Registration failed';
+            toast.error(message);
             return false;
         }
     };
@@ -56,7 +100,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('token');
         setUser(null);
-        toast.success('Logged out');
+        toast.success('Logged out successfully');
     };
 
     return (
@@ -65,3 +109,4 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+

@@ -20,18 +20,41 @@ export const createPost = async (req, res) => {
             return res.status(400).json({ message: 'Title and content are required' });
         }
 
-        const post = await Post.create({
+        // Calculate read time (average 200 words per minute)
+        const wordCount = req.body.content.split(/\s+/).length;
+        const readTime = Math.ceil(wordCount / 200);
+
+        const postData = {
             title: req.body.title,
             content: req.body.content,
-            author: req.user.id
-        });
+            description: req.body.description || '',
+            author: req.user._id,
+            tags: req.body.tags || [],
+            readTime: readTime
+        };
 
+        // Add cover image if uploaded
+        if (req.files && req.files.coverImage) {
+            postData.coverImage = `/uploads/${req.files.coverImage[0].filename}`;
+        }
+
+        // Add other files if uploaded
+        if (req.files && req.files.files) {
+            postData.files = req.files.files.map(file => ({
+                filename: file.originalname,
+                url: `/uploads/${file.filename}`,
+                fileType: file.mimetype,
+                size: file.size
+            }));
+        }
+
+        const post = await Post.create(postData);
         const populatedPost = await Post.findById(post._id).populate('author', 'username email');
 
         res.status(201).json(populatedPost);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Server Error' });
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 

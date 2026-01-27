@@ -1,51 +1,113 @@
 import { Link } from 'react-router-dom';
-import { Heart, MessageCircle, ArrowRight } from 'lucide-react';
+import { Heart, MessageCircle, ArrowRight, Eye, Tag } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const PostCard = ({ post }) => {
+    const formatDate = (date) => {
+        const now = new Date();
+        const postDate = new Date(date);
+        const diffInDays = Math.floor((now - postDate) / (1000 * 60 * 60 * 24));
+
+        if (diffInDays === 0) return 'Today';
+        if (diffInDays === 1) return 'Yesterday';
+        if (diffInDays < 7) return `${diffInDays}d ago`;
+        
+        return postDate.toLocaleDateString(undefined, {
+            month: 'short',
+            day: 'numeric'
+        });
+    };
+
     return (
         <motion.div
             whileHover={{ y: -5 }}
-            className="group flex flex-col h-full"
+            className="group flex flex-col h-full bg-white dark:bg-slate-800/50 rounded-xl overflow-hidden hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-700/50"
         >
-            <Link to={`/posts/${post._id}`} className="flex-1">
-                <div className="mb-4">
-                    <div className="flex items-center space-x-2 mb-3">
-                        <div className="w-6 h-6 rounded-full bg-primary-600 flex items-center justify-center text-[10px] font-bold text-white uppercase">
-                            {post.author.username?.[0]}
-                        </div>
-                        <span className="text-sm font-bold text-slate-900 dark:text-white">{post.author.username}</span>
-                        <span className="text-slate-400 text-sm">·</span>
-                        <span className="text-sm text-slate-500 dark:text-slate-400">
-                            {new Date(post.createdAt).toLocaleDateString(undefined, {
-                                month: 'short',
-                                day: 'numeric'
-                            })}
-                        </span>
-                    </div>
-                    <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-primary-600 transition-colors line-clamp-2">
-                        {post.title}
-                    </h3>
-                    <p className="text-slate-600 dark:text-slate-400 line-clamp-3 text-base leading-relaxed mb-4">
-                        {post.content}
-                    </p>
-                </div>
-            </Link>
-
-            <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
-                <div className="flex items-center space-x-5 text-slate-500">
-                    <div className="flex items-center space-x-1 hover:text-accent-500 transition-colors cursor-pointer">
-                        <Heart size={18} className={post.likes.length > 0 ? "fill-accent-500 text-accent-500" : ""} />
-                        <span className="text-sm font-medium">{post.likes.length}</span>
-                    </div>
-                    <div className="flex items-center space-x-1 hover:text-primary-600 transition-colors cursor-pointer">
-                        <MessageCircle size={18} />
-                        <span className="text-sm font-medium">{post.comments.length}</span>
-                    </div>
-                </div>
-                <Link to={`/posts/${post._id}`} className="text-slate-400 group-hover:text-primary-600 transition-all transform group-hover:translate-x-1">
-                    <ArrowRight size={20} />
+            {/* Cover Image */}
+            {post.coverImage && (
+                <Link to={`/posts/${post._id}`} className="block overflow-hidden h-48">
+                    <img
+                        src={`http://localhost:5000${post.coverImage}`}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                 </Link>
+            )}
+
+            <div className="p-4 md:p-6 flex flex-col h-full">
+                {/* Author Info */}
+                <div className="flex items-center space-x-3 mb-3">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary-600 to-accent-500 flex items-center justify-center text-xs font-bold text-white uppercase flex-shrink-0">
+                        {post.author.username?.[0]}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{post.author.username}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{formatDate(post.createdAt)}</p>
+                    </div>
+                </div>
+
+                {/* Title & Description */}
+                <Link to={`/posts/${post._id}`} className="flex-1">
+                    <div className="mb-4">
+                        <h3 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-2">
+                            {post.title}
+                        </h3>
+                        {post.description && (
+                            <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed mb-3">
+                                {post.description}
+                            </p>
+                        )}
+                    </div>
+                </Link>
+
+                {/* Tags */}
+                {post.tags && post.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {post.tags.slice(0, 3).map((tag, idx) => (
+                            <span
+                                key={idx}
+                                className="inline-flex items-center gap-1 px-2 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-xs font-semibold"
+                            >
+                                <Tag size={12} />
+                                {tag}
+                            </span>
+                        ))}
+                        {post.tags.length > 3 && (
+                            <span className="text-xs text-slate-500 dark:text-slate-400 self-center">+{post.tags.length - 3}</span>
+                        )}
+                    </div>
+                )}
+
+                {/* Stats & Actions */}
+                <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700/50 mt-auto">
+                    <div className="flex items-center gap-4 text-xs md:text-sm text-slate-500 dark:text-slate-400">
+                        {post.readTime && (
+                            <span className="flex items-center gap-1 whitespace-nowrap">
+                                📖 {post.readTime} min
+                            </span>
+                        )}
+                        {post.views !== undefined && (
+                            <span className="flex items-center gap-1 whitespace-nowrap">
+                                <Eye size={14} />
+                                {post.views}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="flex items-center space-x-3 text-slate-500 dark:text-slate-400">
+                        <div className="flex items-center space-x-1 hover:text-accent-500 dark:hover:text-accent-400 transition-colors cursor-pointer">
+                            <Heart size={16} className={post.likes && post.likes.length > 0 ? "fill-accent-500 text-accent-500" : ""} />
+                            <span className="text-xs md:text-sm font-medium">{post.likes?.length || 0}</span>
+                        </div>
+                        <div className="flex items-center space-x-1 hover:text-primary-600 dark:hover:text-primary-400 transition-colors cursor-pointer">
+                            <MessageCircle size={16} />
+                            <span className="text-xs md:text-sm font-medium">{post.comments?.length || 0}</span>
+                        </div>
+                        <Link to={`/posts/${post._id}`} className="text-slate-400 dark:text-slate-500 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-all transform group-hover:translate-x-1">
+                            <ArrowRight size={18} />
+                        </Link>
+                    </div>
+                </div>
             </div>
         </motion.div>
     );
