@@ -10,6 +10,7 @@ const Dashboard = () => {
     const { user } = useAuth();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showSettings, setShowSettings] = useState(false);
 
     useEffect(() => {
         const fetchMyPosts = async () => {
@@ -57,11 +58,42 @@ const Dashboard = () => {
                         <Plus size={20} />
                         Write a Story
                     </Link>
-                    <button className="p-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-50 dark:bg-slate-800 rounded-full transition-colors">
+                    <button 
+                        onClick={() => setShowSettings(!showSettings)}
+                        className="p-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-50 dark:bg-slate-800 rounded-full transition-colors hover:bg-slate-100 dark:hover:bg-slate-700"
+                    >
                         <Settings size={20} />
                     </button>
                 </div>
             </div>
+
+            {showSettings && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowSettings(false)}>
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 max-w-md w-full shadow-xl" onClick={e => e.stopPropagation()}>
+                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">Settings</h2>
+                        <div className="space-y-4">
+                            <button className="w-full text-left px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                                Edit Profile
+                            </button>
+                            <button className="w-full text-left px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                                Notifications
+                            </button>
+                            <button className="w-full text-left px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                                Privacy
+                            </button>
+                            <button className="w-full text-left px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                                Help & Support
+                            </button>
+                        </div>
+                        <button 
+                            onClick={() => setShowSettings(false)}
+                            className="w-full mt-6 px-4 py-3 bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg font-semibold hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
 
             <div className="grid gap-8">
                 <div className="flex items-center justify-between">

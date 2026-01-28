@@ -14,6 +14,8 @@ const PostDetails = () => {
     const { user } = useAuth();
     const [likeCount, setLikeCount] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
+    const [showShare, setShowShare] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -60,6 +62,52 @@ const PostDetails = () => {
         } catch (error) {
             toast.error('Failed to add response');
         }
+    };
+
+    const handleShare = async () => {
+        const url = window.location.href;
+        const title = post?.title || 'Check out this story';
+        
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: title,
+                    text: post?.description || '',
+                    url: url
+                });
+                toast.success('Shared successfully!');
+            } catch (error) {
+                if (error.name !== 'AbortError') {
+                    toast.error('Failed to share');
+                }
+            }
+        } else {
+            // Fallback: Copy to clipboard
+            try {
+                await navigator.clipboard.writeText(url);
+                toast.success('Link copied to clipboard!');
+                setShowShare(false);
+            } catch (error) {
+                toast.error('Failed to copy link');
+            }
+        }
+    };
+
+    const handleMenuAction = (action) => {
+        switch(action) {
+            case 'report':
+                toast.info('Story reported');
+                break;
+            case 'bookmark':
+                toast.success('Story bookmarked');
+                break;
+            case 'subscribe':
+                toast.success('Subscribed to author');
+                break;
+            default:
+                break;
+        }
+        setShowMenu(false);
     };
 
     if (loading) return (
@@ -112,13 +160,97 @@ const PostDetails = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center gap-4 text-slate-500">
-                            <button className="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors">
+                        <div className="flex items-center gap-4 text-slate-500 relative">
+                            <button 
+                                onClick={() => setShowShare(!showShare)}
+                                className="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors hover:text-slate-900 dark:hover:text-white"
+                                title="Share story"
+                            >
                                 <Share2 size={20} />
                             </button>
-                            <button className="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors">
+                            <button 
+                                onClick={() => setShowMenu(!showMenu)}
+                                className="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors hover:text-slate-900 dark:hover:text-white"
+                                title="More options"
+                            >
                                 <MoreHorizontal size={20} />
                             </button>
+
+                            {/* Share Dropdown */}
+                            {showShare && (
+                                <div className="absolute top-full right-0 mt-2 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 z-50 p-3 min-w-max">
+                                    <button
+                                        onClick={handleShare}
+                                        className="w-full text-left px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors flex items-center gap-2"
+                                    >
+                                        <Share2 size={16} />
+                                        Share or Copy Link
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            window.open(`https://twitter.com/intent/tweet?url=${window.location.href}&text=${post?.title}`, '_blank');
+                                            setShowShare(false);
+                                        }}
+                                        className="w-full text-left px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors"
+                                    >
+                                        Share on Twitter
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`, '_blank');
+                                            setShowShare(false);
+                                        }}
+                                        className="w-full text-left px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors"
+                                    >
+                                        Share on Facebook
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${window.location.href}`, '_blank');
+                                            setShowShare(false);
+                                        }}
+                                        className="w-full text-left px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors"
+                                    >
+                                        Share on LinkedIn
+                                    </button>
+                                    <button
+                                        onClick={() => setShowShare(false)}
+                                        className="w-full text-left px-4 py-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors border-t border-slate-200 dark:border-slate-700 mt-2 pt-2 text-sm"
+                                    >
+                                        Close
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Menu Dropdown */}
+                            {showMenu && (
+                                <div className="absolute top-full right-0 mt-2 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 z-50 p-3 min-w-max">
+                                    <button
+                                        onClick={() => handleMenuAction('bookmark')}
+                                        className="w-full text-left px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors"
+                                    >
+                                        Bookmark
+                                    </button>
+                                    <button
+                                        onClick={() => handleMenuAction('subscribe')}
+                                        className="w-full text-left px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors"
+                                    >
+                                        Subscribe to Author
+                                    </button>
+                                    <button
+                                        onClick={() => handleMenuAction('report')}
+                                        className="w-full text-left px-4 py-2.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors border-t border-slate-200 dark:border-slate-700 mt-2 pt-2"
+                                    >
+                                        Report Story
+                                    </button>
+                                    <button
+                                        onClick={() => setShowMenu(false)}
+                                        className="w-full text-left px-4 py-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors border-t border-slate-200 dark:border-slate-700 mt-2 pt-2 text-sm"
+                                    >
+                                        Close
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </header>
