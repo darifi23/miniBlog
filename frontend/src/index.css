@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Merriweather:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,16 +6,50 @@
 
 @layer base {
   body {
-    @apply bg-light dark:bg-dark text-slate-800 dark:text-slate-200 antialiased font-sans selection:bg-primary selection:text-white;
+    @apply text-charcoal-900 dark:text-bone-100 antialiased font-sans;
+    background-color: #F9F7F2;
+  }
+
+  body.dark {
+    background-color: #1a1a1a;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-bold tracking-tight;
+  }
+
+  ::selection {
+    @apply bg-gold-400 text-white;
   }
 }
 
-@layer utilities {
+@layer components {
   .glass {
-    @apply bg-white/70 dark:bg-slate-900/70 backdrop-blur-lg border border-white/20 dark:border-slate-700/30;
+    @apply bg-white/70 dark:bg-charcoal-900/70 backdrop-blur-lg border border-white/20 dark:border-charcoal-700/30;
   }
+
   .card-hover {
     @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  .editorial-title {
+    @apply font-serif text-4xl md:text-5xl font-bold text-charcoal-900 dark:text-bone-100;
+  }
+
+  .editorial-subtitle {
+    @apply font-serif text-lg md:text-xl text-charcoal-600 dark:text-bone-300 leading-relaxed;
+  }
+
+  .gold-accent {
+    @apply text-gold-400 hover:text-gold-500 transition-colors;
+  }
+
+  .button-primary {
+    @apply px-6 py-3 bg-gold-400 hover:bg-gold-500 text-white font-semibold rounded-lg transition-all duration-300 shadow-md hover:shadow-lg inline-flex items-center gap-2;
+  }
+
+  .button-secondary {
+    @apply px-6 py-3 bg-transparent border-2 border-gold-400 text-gold-400 hover:bg-gold-50 dark:hover:bg-charcoal-800 font-semibold rounded-lg transition-all duration-300 inline-flex items-center gap-2;
   }
 }
 
@@ -23,10 +57,17 @@
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-slate-700 rounded-full hover:bg-gray-400 dark:hover:bg-slate-600;
+  @apply bg-bone-300 dark:bg-charcoal-700 rounded-full hover:bg-bone-400 dark:hover:bg-charcoal-600;
+}
+
+/* Smooth transitions */
+* {
+  @apply transition-colors duration-200;
 }
 
