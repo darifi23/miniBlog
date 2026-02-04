@@ -37,49 +37,14 @@ export default {
           700: '#3f3b38',
           900: '#2d2d2d', // Deep Charcoal
         },
-        terracotta: {
-          50: '#fef7f5',
-          100: '#fcefeb',
-          200: '#f7d9cf',
-          300: '#f0bfb0',
-          400: '#e89484',
-          500: '#d97f69', // Terracotta
-          600: '#b85c48',
-          700: '#944839',
-        },
-        majorelle: {
-          50: '#f5f5fe',
-          100: '#ececfd',
-          200: '#d6d5f8',
-          300: '#b4b0f0',
-          400: '#8681e8',
-          500: '#6659dd', // Soft Majorelle Blue
-          600: '#5047c9',
-          700: '#413aaa',
-        },
-        // Legacy colors for compatibility
-        primary: {
-          DEFAULT: '#e8a855',
-          50: '#fefef9',
-          100: '#fdf9ed',
-          200: '#f9efcd',
-          300: '#f1dda8',
-          400: '#e8a855',
-          500: '#e0943d',
-          600: '#d47a1a',
-          700: '#b35e12',
-          800: '#924b0f',
-          900: '#7a3e0d',
-        },
-        secondary: '#6b6561',
-        dark: '#2d2d2d',
-        light: '#f9f7f2',
-        accent: '#d97f69', // Terracotta
+        // Semantic aliases
+        primary: '#E8A855',   // Saffron Gold
+        secondary: '#2D2D2D', // Deep Charcoal
+        background: '#F9F7F2', // Warm Bone
       },
       fontFamily: {
         sans: ['Poppins', 'system-ui', 'sans-serif'],
         serif: ['Playfair Display', 'Merriweather', 'Georgia', 'serif'],
-        display: ['Playfair Display', 'serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out',

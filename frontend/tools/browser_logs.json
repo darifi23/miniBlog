@@ -1,0 +1,19 @@
+{
+  "console": [],
+  "errors": [
+    {
+      "type": "navigation",
+      "message": "net::ERR_CONNECTION_REFUSED at http://localhost:5174/register",
+      "stack": "Error: net::ERR_CONNECTION_REFUSED at http://localhost:5174/register\n    at navigate (c:\\Users\\hp\\Desktop\\DMS\\miniBlog\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\cdp\\Frame.js:184:27)\n    at async Deferred.race (c:\\Users\\hp\\Desktop\\DMS\\miniBlog\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\util\\Deferred.js:36:20)\n    at async CdpFrame.goto (c:\\Users\\hp\\Desktop\\DMS\\miniBlog\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\cdp\\Frame.js:150:25)\n    at async CdpPage.goto (c:\\Users\\hp\\Desktop\\DMS\\miniBlog\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\Page.js:580:20)\n    at async c:\\Users\\hp\\Desktop\\DMS\\miniBlog\\tools\\collect_console.js:38:5",
+      "timestamp": 1769688209334
+    }
+  ],
+  "network": [
+    {
+      "type": "requestfailed",
+      "url": "http://localhost:5174/register",
+      "failureText": "net::ERR_CONNECTION_REFUSED",
+      "timestamp": 1769688209314
+    }
+  ]
+}

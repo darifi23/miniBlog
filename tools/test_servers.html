@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Server Test</title>
+</head>
+<body>
+    <h1>Testing Servers</h1>
+    <div id="result"></div>
+    <script>
+        async function test() {
+            const res = document.getElementById('result');
+            
+            try {
+                const f1 = await fetch('http://localhost:5173/').then(r => r.status);
+                res.innerHTML += '<p>Frontend 5173: ' + f1 + '</p>';
+            } catch (e) {
+                res.innerHTML += '<p>Frontend 5173: ERROR - ' + e.message + '</p>';
+            }
+            
+            try {
+                const f2 = await fetch('http://localhost:5000/api/posts').then(r => r.status);
+                res.innerHTML += '<p>Backend 5000: ' + f2 + '</p>';
+            } catch (e) {
+                res.innerHTML += '<p>Backend 5000: ERROR - ' + e.message + '</p>';
+            }
+        }
+        test();
+    </script>
+</body>
+</html>

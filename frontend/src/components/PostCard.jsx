@@ -11,7 +11,7 @@ const PostCard = ({ post }) => {
         if (diffInDays === 0) return 'Today';
         if (diffInDays === 1) return 'Yesterday';
         if (diffInDays < 7) return `${diffInDays}d ago`;
-        
+
         return postDate.toLocaleDateString(undefined, {
             month: 'short',
             day: 'numeric'
@@ -20,93 +20,51 @@ const PostCard = ({ post }) => {
 
     return (
         <motion.div
-            whileHover={{ y: -5 }}
-            className="group flex flex-col h-full bg-white dark:bg-charcoal-800/50 rounded-xl overflow-hidden hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 border border-bone-200 dark:border-charcoal-700/50"
+            whileHover={{ y: -4 }}
+            className="group flex flex-col h-full bg-transparent"
         >
             {/* Cover Image */}
             {post.coverImage && (
-                <Link to={`/posts/${post._id}`} className="block overflow-hidden h-48">
+                <Link to={`/posts/${post._id}`} className="block overflow-hidden rounded-lg mb-4 aspect-[4/3] bg-bone-100">
                     <img
                         src={`http://localhost:5000${post.coverImage}`}
                         alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
                 </Link>
             )}
 
-            <div className="p-4 md:p-6 flex flex-col h-full">
-                {/* Author Info */}
-                <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-gold-400 to-terracotta-500 flex items-center justify-center text-xs font-bold text-white uppercase flex-shrink-0">
-                        {post.author.username?.[0]}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-charcoal-900 dark:text-bone-100 truncate">{post.author.username}</p>
-                        <p className="text-xs text-charcoal-500 dark:text-bone-400">{formatDate(post.createdAt)}</p>
-                    </div>
+            <div className="flex flex-col h-full">
+                {/* Meta */}
+                <div className="flex items-center gap-3 mb-3 text-xs uppercase tracking-wider font-medium text-charcoal-500 dark:text-bone-400">
+                    <span className="text-primary">{post.tags?.[0] || 'Story'}</span>
+                    <span>•</span>
+                    <span>{post.readTime || 5} min read</span>
                 </div>
 
-                {/* Title & Description */}
-                <Link to={`/posts/${post._id}`} className="flex-1">
-                    <div className="mb-4">
-                        <h3 className="text-xl md:text-2xl font-serif font-bold text-charcoal-900 dark:text-bone-100 mb-2 leading-tight group-hover:text-gold-400 dark:group-hover:text-gold-300 transition-colors line-clamp-2">
-                            {post.title}
-                        </h3>
-                        {post.description && (
-                            <p className="text-sm md:text-base text-charcoal-600 dark:text-bone-300 line-clamp-2 leading-relaxed mb-3">
-                                {post.description}
-                            </p>
-                        )}
-                    </div>
+                {/* Title */}
+                <Link to={`/posts/${post._id}`} className="block mb-3">
+                    <h3 className="text-2xl font-serif font-bold text-secondary dark:text-bone-100 leading-tight group-hover:text-primary transition-colors">
+                        {post.title}
+                    </h3>
                 </Link>
 
-                {/* Tags */}
-                {post.tags && post.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
-                        {post.tags.slice(0, 3).map((tag, idx) => (
-                            <span
-                                key={idx}
-                                className="inline-flex items-center gap-1 px-2 py-1 bg-gold-100 dark:bg-gold-900/30 text-gold-700 dark:text-gold-300 rounded-full text-xs font-semibold"
-                            >
-                                <Tag size={12} />
-                                {tag}
-                            </span>
-                        ))}
-                        {post.tags.length > 3 && (
-                            <span className="text-xs text-charcoal-500 dark:text-bone-400 self-center">+{post.tags.length - 3}</span>
-                        )}
-                    </div>
+                {/* Description */}
+                {post.description && (
+                    <p className="text-charcoal-600 dark:text-bone-400 leading-relaxed line-clamp-2 mb-4 font-light text-sm">
+                        {post.description}
+                    </p>
                 )}
 
-                {/* Stats & Actions */}
-                <div className="flex items-center justify-between pt-4 border-t border-bone-200 dark:border-charcoal-700/50 mt-auto">
-                    <div className="flex items-center gap-4 text-xs md:text-sm text-charcoal-500 dark:text-bone-400">
-                        {post.readTime && (
-                            <span className="flex items-center gap-1 whitespace-nowrap">
-                                📖 {post.readTime} min
-                            </span>
-                        )}
-                        {post.views !== undefined && (
-                            <span className="flex items-center gap-1 whitespace-nowrap">
-                                <Eye size={14} />
-                                {post.views}
-                            </span>
-                        )}
-                    </div>
-
-                    <div className="flex items-center space-x-3 text-charcoal-500 dark:text-bone-400">
-                        <div className="flex items-center space-x-1 hover:text-terracotta-500 dark:hover:text-terracotta-400 transition-colors cursor-pointer">
-                            <Heart size={16} className={post.likes && post.likes.length > 0 ? "fill-terracotta-500 text-terracotta-500" : ""} />
-                            <span className="text-xs md:text-sm font-medium">{post.likes?.length || 0}</span>
+                {/* Footer (Date & Save) */}
+                <div className="mt-auto flex items-center justify-between border-t border-bone-200 dark:border-charcoal-700 pt-4">
+                    <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-full bg-bone-200 dark:bg-charcoal-600 flex items-center justify-center text-[10px] font-bold text-secondary">
+                            {post.author.username?.[0]}
                         </div>
-                        <div className="flex items-center space-x-1 hover:text-gold-600 dark:hover:text-gold-400 transition-colors cursor-pointer">
-                            <MessageCircle size={16} />
-                            <span className="text-xs md:text-sm font-medium">{post.comments?.length || 0}</span>
-                        </div>
-                        <Link to={`/posts/${post._id}`} className="text-charcoal-400 dark:text-bone-600 group-hover:text-gold-400 dark:group-hover:text-gold-300 transition-all transform group-hover:translate-x-1">
-                            <ArrowRight size={18} />
-                        </Link>
+                        <span className="text-xs font-medium text-charcoal-500 dark:text-bone-400">{post.author.username}</span>
                     </div>
+                    <span className="text-xs text-charcoal-400 dark:text-bone-500">{formatDate(post.createdAt)}</span>
                 </div>
             </div>
         </motion.div>
