@@ -9,6 +9,8 @@ import CreatePost from './pages/CreatePost';
 import PostDetails from './pages/PostDetails';
 import Dashboard from './pages/Dashboard';
 import Membership from './pages/Membership';
+import Posts from './pages/Posts';
+
 
 // PrivateRoute component to restrict access to sensitive actions 
 const PrivateRoute = ({ children }) => {
@@ -28,7 +30,9 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/membership" element={<Membership />} />
+            <Route path="/posts" element={<Posts />} />
             <Route path="/posts/:id" element={<PostDetails />} />
+
             <Route path="/create-post" element={
               <PrivateRoute>
                 <CreatePost />
