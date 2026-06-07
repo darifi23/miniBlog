@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 const corsOptions = {
-    origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'],
+    origin: true,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -55,6 +55,17 @@ const connectDB = async () => {
     }
 };
 
-connectDB().then(() => {
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-});
+const startServer = async () => {
+    try {
+        await connectDB();
+        if (process.env.VERCEL !== '1') {
+            app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+        }
+    } catch (error) {
+        console.error('Failed to start server:', error);
+    }
+};
+
+startServer();
+
+export default app;

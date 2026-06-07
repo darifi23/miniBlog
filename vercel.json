@@ -5,7 +5,7 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "frontend/dist"
+        "distDir": "dist"
       }
     },
     {
@@ -15,22 +15,16 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "^/api/(.*)$",
       "dest": "/backend/server.js"
     },
     {
-      "src": "/uploads/(.*)",
+      "src": "^/uploads/(.*)$",
       "dest": "/backend/server.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/frontend/dist/$1"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "^/(?!api|uploads).*",
-      "destination": "/frontend/dist/index.html"
+      "src": "^/(.*)$",
+      "dest": "/index.html"
     }
   ]
 }

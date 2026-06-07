@@ -127,7 +127,7 @@ const Home = () => {
                                 <Link to={`/posts/${posts[0]._id}`}>
                                     {posts[0].coverImage ? (
                                         <img
-                                            src={`http://localhost:5000${posts[0].coverImage}`}
+                                            src={`${import.meta.env.VITE_API_URL || ''}${posts[0].coverImage}`}
                                             alt={posts[0].title}
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                         />

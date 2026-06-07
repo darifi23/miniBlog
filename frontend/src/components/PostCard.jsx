@@ -27,7 +27,7 @@ const PostCard = ({ post }) => {
             {post.coverImage && (
                 <Link to={`/posts/${post._id}`} className="block overflow-hidden rounded-lg mb-4 aspect-[4/3] bg-bone-100">
                     <img
-                        src={`http://localhost:5000${post.coverImage}`}
+                        src={`${import.meta.env.VITE_API_URL || ''}${post.coverImage}`}
                         alt={post.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
