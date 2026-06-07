@@ -43,29 +43,17 @@ app.use((err, req, res, next) => {
 
 // Database Connection
 // Database Connection
-const connectDB = async () => {
-    try {
-        const conn = await mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI)
+    .then((conn) => {
         console.log(`MongoDB Connected successfully: ${conn.connection.host}`);
-        console.log(`MongoDB Database: ${conn.connection.db.databaseName}`);
-    } catch (error) {
-        console.error('Error connecting to MongoDB. Check your MONGO_URI and IP Whitelist.');
-        console.error('Message:', error.message);
-        process.exit(1);
-    }
-};
+    })
+    .catch((error) => {
+        console.error('Error connecting to MongoDB:', error.message);
+    });
 
-const startServer = async () => {
-    try {
-        await connectDB();
-        if (process.env.VERCEL !== '1') {
-            app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-        }
-    } catch (error) {
-        console.error('Failed to start server:', error);
-    }
-};
-
-startServer();
+// Only start the local server listening if we are NOT on Vercel
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
 
 export default app;
