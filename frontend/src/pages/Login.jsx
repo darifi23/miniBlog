@@ -135,7 +135,7 @@ const Login = () => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-gradient-to-r from-primary-600 to-primary-500 text-white py-3.5 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-primary-500/30 hover:scale-[1.02] transition-all duration-300 disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed"
+                        className="w-full bg-gradient-to-r from-sky-600 to-sky-500 text-white py-3.5 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-sky-500/30 hover:scale-[1.02] transition-all duration-300 disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed"
                     >
                         {isLoading ? 'Signing In...' : 'Sign In'}
                     </button>

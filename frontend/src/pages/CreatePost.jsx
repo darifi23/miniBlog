@@ -213,7 +213,7 @@ const CreatePost = () => {
                                 form="post-form"
                                 type="submit"
                                 disabled={isLoading}
-                                className="bg-gradient-to-r from-primary-600 to-primary-500 text-white px-4 md:px-6 py-2 rounded-full font-bold hover:opacity-90 transition-all shadow-lg shadow-primary-500/20 flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                                className="bg-gradient-to-r from-sky-600 to-sky-500 text-white px-4 md:px-6 py-2 rounded-full font-bold hover:bg-sky-700 hover:opacity-90 transition-all shadow-lg shadow-sky-500/20 flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                             >
                                 <Send size={18} />
                                 {isLoading ? 'Publishing...' : 'Publish'}
@@ -347,6 +347,17 @@ const CreatePost = () => {
                                     ))}
                                 </div>
                             )}
+
+                            <div className="mt-8 flex flex-col items-center gap-4">
+                                <button
+                                    type="submit"
+                                    disabled={isLoading}
+                                    className="w-full md:w-auto bg-gradient-to-r from-sky-600 to-sky-500 text-white px-8 py-3 rounded-full font-bold hover:bg-sky-700 hover:opacity-95 transition-all shadow-lg shadow-sky-500/20 disabled:opacity-70 disabled:cursor-not-allowed"
+                                >
+                                    {isLoading ? 'Publishing...' : 'Publish Story'}
+                                </button>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">Scroll up or use this button after finishing your post.</p>
+                            </div>
                         </div>
                     </form>
 

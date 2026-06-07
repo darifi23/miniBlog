@@ -47,6 +47,7 @@ const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGO_URI);
         console.log(`MongoDB Connected successfully: ${conn.connection.host}`);
+        console.log(`MongoDB Database: ${conn.connection.db.databaseName}`);
     } catch (error) {
         console.error('Error connecting to MongoDB. Check your MONGO_URI and IP Whitelist.');
         console.error('Message:', error.message);
