@@ -16,6 +16,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Health route for smoke checks
+app.get('/api/health', (req, res) => res.json({ ok: true }));
+
 // Middleware
 const corsOptions = {
     origin: true,
@@ -40,20 +43,5 @@ app.use((err, req, res, next) => {
     console.error('Error:', err);
     res.status(err.status || 500).json({ message: err.message || 'Server error' });
 });
-
-// Database Connection
-// Database Connection
-mongoose.connect(process.env.MONGO_URI)
-    .then((conn) => {
-        console.log(`MongoDB Connected successfully: ${conn.connection.host}`);
-    })
-    .catch((error) => {
-        console.error('Error connecting to MongoDB:', error.message);
-    });
-
-// Only start the local server listening if we are NOT on Vercel
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-}
 
 export default app;

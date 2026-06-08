@@ -1,5 +1,27 @@
 import Post from '../models/Post.js';
 import User from '../models/User.js';
+import { v2 as cloudinary } from 'cloudinary';
+import streamifier from 'streamifier';
+
+// Configure Cloudinary from env (ensure CLOUDINARY_* variables are set)
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const uploadBufferToCloudinary = (buffer, folder = 'miniBlog') => {
+    return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+            { folder },
+            (error, result) => {
+                if (error) return reject(error);
+                resolve(result);
+            }
+        );
+        streamifier.createReadStream(buffer).pipe(uploadStream);
+    });
+};
 
 // Get all posts
 export const getAllPosts = async (req, res) => {
@@ -33,19 +55,34 @@ export const createPost = async (req, res) => {
             readTime: readTime
         };
 
-        // Add cover image if uploaded
-        if (req.files && req.files.coverImage) {
-            postData.coverImage = `/uploads/${req.files.coverImage[0].filename}`;
+        // Add cover image if uploaded (upload to Cloudinary)
+        if (req.files && req.files.coverImage && req.files.coverImage[0]) {
+            try {
+                const file = req.files.coverImage[0];
+                const result = await uploadBufferToCloudinary(file.buffer, 'miniBlog/cover');
+                postData.coverImage = result.secure_url;
+            } catch (err) {
+                console.error('Cloudinary cover upload error:', err);
+            }
         }
 
-        // Add other files if uploaded
-        if (req.files && req.files.files) {
-            postData.files = req.files.files.map(file => ({
-                filename: file.originalname,
-                url: `/uploads/${file.filename}`,
-                fileType: file.mimetype,
-                size: file.size
-            }));
+        // Add other files if uploaded (upload each to Cloudinary)
+        if (req.files && req.files.files && req.files.files.length) {
+            const uploadedFiles = [];
+            for (const file of req.files.files) {
+                try {
+                    const result = await uploadBufferToCloudinary(file.buffer, 'miniBlog/files');
+                    uploadedFiles.push({
+                        filename: file.originalname,
+                        url: result.secure_url,
+                        fileType: file.mimetype,
+                        size: file.size
+                    });
+                } catch (err) {
+                    console.error('Cloudinary file upload error:', err);
+                }
+            }
+            if (uploadedFiles.length) postData.files = uploadedFiles;
         }
 
         const post = await Post.create(postData);
